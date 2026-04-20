@@ -1,0 +1,26 @@
+databases:
+  - name: bdayreminder-db
+    plan: free
+    databaseName: bdayreminder
+    user: bdayreminder
+
+services:
+  - type: web
+    name: bdayreminder
+    runtime: docker
+    plan: free
+    autoDeploy: true
+    healthCheckPath: /
+    envVars:
+      - key: SECRET_KEY_BASE
+        generateValue: true
+      - key: PHX_HOST
+        value: bdayreminder.onrender.com
+      - key: DATABASE_URL
+        fromDatabase:
+          name: bdayreminder-db
+          property: connectionString
+      - key: POOL_SIZE
+        value: 10
+      - key: PHX_SERVER
+        value: "true"
