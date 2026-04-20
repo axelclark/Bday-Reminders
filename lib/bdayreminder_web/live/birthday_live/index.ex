@@ -45,8 +45,6 @@ defmodule BdayreminderWeb.BirthdayLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    if connected?(socket), do: Contacts.subscribe()
-
     {:ok,
      socket
      |> assign(:page_title, "Listing Birthdays")
@@ -58,19 +56,6 @@ defmodule BdayreminderWeb.BirthdayLive.Index do
     birthday = Contacts.get_birthday!(id)
     {:ok, _} = Contacts.delete_birthday(birthday)
 
-    {:noreply, stream_delete(socket, :birthdays, birthday)}
-  end
-
-  @impl true
-  def handle_info({[:birthday, :created], birthday}, socket) do
-    {:noreply, stream_insert(socket, :birthdays, birthday)}
-  end
-
-  def handle_info({[:birthday, :updated], birthday}, socket) do
-    {:noreply, stream_insert(socket, :birthdays, birthday)}
-  end
-
-  def handle_info({[:birthday, :deleted], birthday}, socket) do
     {:noreply, stream_delete(socket, :birthdays, birthday)}
   end
 
